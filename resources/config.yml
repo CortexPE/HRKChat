@@ -1,0 +1,28 @@
+---
+# Placeholder settings
+placeholder:
+  # Placeholder prefix
+  prefix: "{{"
+  # Placeholder suffix
+  suffix: "}}"
+  # Placeholder cache expiration time
+  cacheExpiration: 10
+
+# !!! NOTE !!!
+# Placeholders are registered by plugins.
+# The only placeholders that exist by default are:
+# - {{displayName}} => Player display name
+# - {{msg}} => [ONLY FOR CHAT FORMAT] the message the player sent
+
+# Chat format for highest roles
+chatFormat:
+  # Format:
+  # RoleID: "<{{displayName}}> {{msg}}"
+  1: "<{{displayName}}> {{msg}}"
+
+# Chat format for highest roles
+nameTagFormat:
+  # Format:
+  # RoleID: "{{displayName}}"
+  1: "{{displayName}}"
+...
