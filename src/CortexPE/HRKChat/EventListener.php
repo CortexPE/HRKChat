@@ -8,7 +8,7 @@
  *    /_/ /_/_/\___/_/   \__,_/_/   \___/_/ /_/\__, /
  *                                            /____/
  *
- * Hierarchy - Role-based permission management system
+ * HRKChat - Chat & nametag formatter that respects Role Hierarchy
  * Copyright (C) 2019-Present CortexPE
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,14 +37,14 @@ use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\Player;
 
 class EventListener implements Listener {
-	/** @var Main */
+	/** @var HRKChat */
 	protected $plugin;
 	/** @var string[] */
 	protected $chatFormats = [];
 	/** @var string[] */
 	protected $nameTagFormats = [];
 
-	public function __construct(Main $plugin, array $config) {
+	public function __construct(HRKChat $plugin, array $config) {
 		$this->plugin = $plugin;
 		$this->chatFormats = $config["chatFormat"];
 		$this->nameTagFormats = $config["nameTagFormat"];
@@ -73,7 +73,7 @@ class EventListener implements Listener {
 				}
 			}
 
-			$p->setNameTag($this->plugin->getPlaceholderManager()->processString($this->nameTagFormats[$roleID], $p));
+			$p->setNameTag($this->plugin->getPlaceholderManager()->processString($this->nameTagFormats[$roleID], $m));
 		}
 	}
 
@@ -105,6 +105,6 @@ class EventListener implements Listener {
 			$this->chatFormats[$roleID]
 		);
 
-		$ev->setFormat($phMgr->processString($msg, $p));
+		$ev->setFormat($phMgr->processString($msg, $member));
 	}
 }

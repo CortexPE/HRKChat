@@ -8,7 +8,7 @@
  *    /_/ /_/_/\___/_/   \__,_/_/   \___/_/ /_/\__, /
  *                                            /____/
  *
- * Hierarchy - Role-based permission management system
+ * HRKChat - Chat & nametag formatter that respects Role Hierarchy
  * Copyright (C) 2019-Present CortexPE
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,28 +29,28 @@ declare(strict_types=1);
 
 namespace CortexPE\HRKChat;
 
+use CortexPE\Hierarchy\member\BaseMember;
 use CortexPE\HRKChat\placeholder\Placeholder;
 use CortexPE\HRKChat\placeholder\PlaceholderManager;
-use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase {
+class HRKChat extends PluginBase {
 	/** @var PlaceholderManager */
-	protected $placeholderManager;
+	protected static $placeholderManager;
 
 	public function onEnable(): void {
 		$this->saveResource("config.yml");
 
-		$this->placeholderManager = new PlaceholderManager(
+		self::$placeholderManager = new PlaceholderManager(
 			$this,
 			$this->getConfig()->get("placeholder")
 		);
 
 		// Default placeholder(s)
-		$this->placeholderManager->registerPlaceholder(
+		self::$placeholderManager->registerPlaceholder(
 			new Placeholder("displayName",
-				function (Player $player): string {
-					return $player->getName();
+				function (BaseMember $member): string {
+					return $member->getPlayer()->getDisplayName();
 				}
 			)
 		);
@@ -64,7 +64,7 @@ class Main extends PluginBase {
 	/**
 	 * @return PlaceholderManager
 	 */
-	public function getPlaceholderManager(): PlaceholderManager {
-		return $this->placeholderManager;
+	public static function getPlaceholderManager(): PlaceholderManager {
+		return self::$placeholderManager;
 	}
 }

@@ -8,7 +8,7 @@
  *    /_/ /_/_/\___/_/   \__,_/_/   \___/_/ /_/\__, /
  *                                            /____/
  *
- * Hierarchy - Role-based permission management system
+ * HRKChat - Chat & nametag formatter that respects Role Hierarchy
  * Copyright (C) 2019-Present CortexPE
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace CortexPE\HRKChat\placeholder;
 
 
-use pocketmine\Player;
+use CortexPE\Hierarchy\member\BaseMember;
 use pocketmine\utils\Utils;
 
 class Placeholder {
@@ -44,7 +44,7 @@ class Placeholder {
 	protected $lastUpdate = 0;
 
 	public function __construct(string $name, callable $callback) {
-		Utils::validateCallableSignature(function (Player $player): string {
+		Utils::validateCallableSignature(function (BaseMember $player): string {
 			return '';
 		}, $callback);
 
@@ -60,12 +60,12 @@ class Placeholder {
 	}
 
 	/**
-	 * @param Player $player
+	 * @param BaseMember $player
 	 *
 	 * @return string
 	 */
-	public function getValue(Player $player):string {
-		if((time() - $this->lastUpdate) < PlaceholderManager::getCacheExpiration()){
+	public function getValue(BaseMember $player):string {
+		if((time() - $this->lastUpdate) > PlaceholderManager::getCacheExpiration()){
 			return ($this->lastValue = ($this->callback)($player));
 		}
 		return $this->lastValue;

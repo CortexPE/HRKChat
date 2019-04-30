@@ -1,5 +1,5 @@
 name: HRKChat
-main: CortexPE\HRKChat\Main
+main: CortexPE\HRKChat\HRKChat
 version: 1.0.0
 api: 3.0.0
 load: POSTWORLD

@@ -8,7 +8,7 @@
  *    /_/ /_/_/\___/_/   \__,_/_/   \___/_/ /_/\__, /
  *                                            /____/
  *
- * Hierarchy - Role-based permission management system
+ * HRKChat - Chat & nametag formatter that respects Role Hierarchy
  * Copyright (C) 2019-Present CortexPE
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,11 +30,11 @@ declare(strict_types=1);
 namespace CortexPE\HRKChat\placeholder;
 
 
-use CortexPE\HRKChat\Main;
-use pocketmine\Player;
+use CortexPE\Hierarchy\member\BaseMember;
+use CortexPE\HRKChat\HRKChat;
 
 class PlaceholderManager {
-	/** @var Main */
+	/** @var HRKChat */
 	protected $plugin;
 	/** @var string */
 	protected $prefix = "{{";
@@ -45,7 +45,7 @@ class PlaceholderManager {
 	/** @var Placeholder[] */
 	protected $placeholders = [];
 
-	public function __construct(Main $plugin, array $config) {
+	public function __construct(HRKChat $plugin, array $config) {
 		$this->plugin = $plugin;
 		self::$cacheExpiration = $config["cacheExpiration"];
 		$this->prefix = $config["prefix"];
@@ -59,7 +59,7 @@ class PlaceholderManager {
 		return self::$cacheExpiration;
 	}
 
-	public function registerPlaceholder(Placeholder $placeholder):void {
+	public function registerPlaceholder(Placeholder $placeholder): void {
 		$this->placeholders[$placeholder->getName()] = clone $placeholder;
 	}
 
@@ -67,14 +67,15 @@ class PlaceholderManager {
 	 * Replaces placeholders with their respective values
 	 *
 	 * @param string $message
-	 * @param Player $player
+	 * @param BaseMember $player
 	 *
 	 * @return string
 	 */
-	public function processString(string $message, Player $player):string {
-		foreach($this->placeholders as $name => $placeholder){
+	public function processString(string $message, BaseMember $player): string {
+		foreach($this->placeholders as $name => $placeholder) {
 			$message = str_replace($this->prefix . $name . $this->suffix, $placeholder->getValue($player), $message);
 		}
+
 		return $message;
 	}
 
