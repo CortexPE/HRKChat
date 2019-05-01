@@ -50,7 +50,7 @@ class Placeholder {
 		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-naming-standard
 		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-callback-standard
 		 */
-		if(!preg_match("/^(?:[A-Za-z0-9_]+\.)+[A-Za-z0-9_]{3,}$/", $name)) {
+		if(!preg_match("/^(?:[A-Za-z0-9_\-]{2,})(?:\.[A-Za-z0-9_\-]+)+$/", $name)) {
 			throw new \InvalidArgumentException("Placeholder name does not meet specific naming standards.");
 		}
 		Utils::validateCallableSignature(function (BaseMember $player): string {

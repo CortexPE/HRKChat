@@ -63,6 +63,18 @@ class PlaceholderManager {
 		$this->placeholders[$placeholder->getName()] = clone $placeholder;
 	}
 
+	public function isRegistered(string $placeholderName): bool {
+		return isset($this->placeholders[$placeholderName]);
+	}
+
+	public function unregisterPlaceholder(Placeholder $placeholder): void {
+		unset($this->placeholders[$placeholder->getName()]);
+	}
+
+	public function unregisterPlaceholderByName(string $placeholderName): void {
+		unset($this->placeholders[$placeholderName]);
+	}
+
 	/**
 	 * Replaces placeholders with their respective values
 	 *
