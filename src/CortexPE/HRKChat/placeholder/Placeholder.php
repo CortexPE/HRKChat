@@ -75,6 +75,7 @@ class Placeholder {
 	 */
 	public function getValue(BaseMember $player): string {
 		if((time() - $this->lastUpdate) > PlaceholderManager::getCacheExpiration()) {
+			$this->lastUpdate = time();
 			return ($this->lastValue = ($this->callback)($player));
 		}
 
