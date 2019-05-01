@@ -32,6 +32,7 @@ namespace CortexPE\HRKChat\placeholder;
 
 use CortexPE\Hierarchy\member\BaseMember;
 use CortexPE\HRKChat\HRKChat;
+use CortexPE\HRKChat\placeholder\exception\PlaceholderCollisionError;
 
 class PlaceholderManager {
 	/** @var HRKChat */
@@ -60,7 +61,10 @@ class PlaceholderManager {
 	}
 
 	public function registerPlaceholder(Placeholder $placeholder): void {
-		$this->placeholders[$placeholder->getName()] = clone $placeholder;
+		if($this->isRegistered(($n = $placeholder->getName()))){
+			throw new PlaceholderCollisionError("Placeholder with same name, '{$n}' has already been registered.");
+		}
+		$this->placeholders[$n] = $placeholder;
 	}
 
 	public function isRegistered(string $placeholderName): bool {
