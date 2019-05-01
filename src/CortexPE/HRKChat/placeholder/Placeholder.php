@@ -44,6 +44,15 @@ class Placeholder {
 	protected $lastUpdate = 0;
 
 	public function __construct(string $name, callable $callback) {
+		/***
+		 * Read the placeholder docs:
+		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-registration
+		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-naming-standard
+		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-callback-standard
+		 */
+		if(!preg_match("/^(?:[A-Za-z0-9_]+\.)+[A-Za-z0-9_]{3,}$/", $name)) {
+			throw new \InvalidArgumentException("Placeholder name does not meet specific naming standards.");
+		}
 		Utils::validateCallableSignature(function (BaseMember $player): string {
 			return '';
 		}, $callback);
@@ -64,10 +73,11 @@ class Placeholder {
 	 *
 	 * @return string
 	 */
-	public function getValue(BaseMember $player):string {
-		if((time() - $this->lastUpdate) > PlaceholderManager::getCacheExpiration()){
+	public function getValue(BaseMember $player): string {
+		if((time() - $this->lastUpdate) > PlaceholderManager::getCacheExpiration()) {
 			return ($this->lastValue = ($this->callback)($player));
 		}
+
 		return $this->lastValue;
 	}
 }

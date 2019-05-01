@@ -5,24 +5,32 @@ placeholder:
   prefix: "{{"
   # Placeholder suffix
   suffix: "}}"
-  # Placeholder cache expiration time
+  # Placeholder cache expiration time in seconds
   cacheExpiration: 10
 
 # !!! NOTE !!!
-# Placeholders are registered by plugins.
+# Placeholders are registered by plugins. Please read the documentation pages at:
+#  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-registration
+#  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-naming-standard
+#  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-callback-standard
+#
 # The only placeholders that exist by default are:
-# - {{displayName}} => Player display name
+# - {{hrk.displayName}} => Player display name
 # - {{msg}} => [ONLY FOR CHAT FORMAT] the message the player sent
+#
+# This basically means that other plugins such as factions plugins SHOULD register their own placeholders.
+# A big advantage of this is that, there can be unlimited placeholders to use, as plugins can expand it indefinitely
+# !!! NOTE !!!
 
 # Chat format for highest roles
 chatFormat:
   # Format:
-  # RoleID: "<{{displayName}}> {{msg}}"
-  1: "<{{displayName}}> {{msg}}"
+  # RoleID: "<{{hrk.displayName}}> {{msg}}"
+  1: "<{{hrk.displayName}}> {{msg}}"
 
 # Chat format for highest roles
 nameTagFormat:
   # Format:
-  # RoleID: "{{displayName}}"
-  1: "{{displayName}}"
+  # RoleID: "{{hrk.displayName}}"
+  1: "{{hrk.displayName}}"
 ...

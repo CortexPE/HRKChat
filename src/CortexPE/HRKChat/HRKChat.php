@@ -48,7 +48,7 @@ class HRKChat extends PluginBase {
 
 		// Default placeholder(s)
 		self::$placeholderManager->registerPlaceholder(
-			new Placeholder("displayName",
+			new Placeholder("hrk.displayName",
 				function (BaseMember $member): string {
 					return $member->getPlayer()->getDisplayName();
 				}
