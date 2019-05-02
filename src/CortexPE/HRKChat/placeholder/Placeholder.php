@@ -33,15 +33,15 @@ namespace CortexPE\HRKChat\placeholder;
 use CortexPE\Hierarchy\member\BaseMember;
 use pocketmine\utils\Utils;
 
-class Placeholder {
+final class Placeholder {
 	/** @var string */
-	protected $name;
+	private $name;
 	/** @var callable */
-	protected $callback;
+	private $callback;
 	/** @var string */
-	protected $lastValue = "";
+	private $lastValue = "";
 	/** @var int */
-	protected $lastUpdate = 0;
+	private $lastUpdate = 0;
 
 	public function __construct(string $name, callable $callback) {
 		/***
