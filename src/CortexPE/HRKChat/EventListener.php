@@ -32,7 +32,6 @@ namespace CortexPE\HRKChat;
 
 use CortexPE\Hierarchy\event\MemberRoleUpdateEvent;
 use CortexPE\Hierarchy\Hierarchy;
-use CortexPE\Hierarchy\role\Role;
 use CortexPE\HRKChat\placeholder\PlaceholderManager;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -45,8 +44,6 @@ class EventListener implements Listener {
 	private $phMgr;
 	/** @var Hierarchy */
 	private $hrk;
-	/** @var Role */
-	private $defaultRole;
 	/** @var string[] */
 	private $chatFormats = [];
 	/** @var string[] */
@@ -56,7 +53,6 @@ class EventListener implements Listener {
 		$this->plugin = $plugin;
 		$this->phMgr = $phMgr;
 		$this->hrk = $plugin->getServer()->getPluginManager()->getPlugin("Hierarchy");
-		$this->defaultRole = $this->hrk->getRoleManager()->getDefaultRole();
 		$this->chatFormats = $config["chatFormat"];
 		$this->nameTagFormats = $config["nameTagFormat"];
 	}
@@ -73,7 +69,7 @@ class EventListener implements Listener {
 		if($p instanceof Player) {
 			$roles = $m->getRoles();
 			$topRolePosition = PHP_INT_MIN;
-			$roleID = $this->defaultRole->getId();
+			$roleID = $this->hrk->getRoleManager()->getDefaultRole()->getId();
 			foreach($roles as $role) {
 				if(
 					isset($this->nameTagFormats[$role->getId()]) &&
@@ -99,7 +95,7 @@ class EventListener implements Listener {
 
 		$roles = $member->getRoles();
 		$topRolePosition = PHP_INT_MIN;
-		$roleID = $this->defaultRole->getId();
+		$roleID = $this->hrk->getRoleManager()->getDefaultRole()->getId();
 		foreach($roles as $role) {
 			if(
 				isset($this->chatFormats[$role->getId()]) &&
