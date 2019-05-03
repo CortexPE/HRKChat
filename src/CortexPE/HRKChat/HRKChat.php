@@ -41,13 +41,12 @@ class HRKChat extends PluginBase {
 	public function onEnable(): void {
 		$this->saveResource("config.yml");
 
-		self::$placeholderManager = new PlaceholderManager(
-			$this,
+		$phMgr = self::$placeholderManager = new PlaceholderManager(
 			$this->getConfig()->get("placeholder")
 		);
 
 		// Default placeholder(s)
-		self::$placeholderManager->registerPlaceholder(
+		$phMgr->registerPlaceholder(
 			new Placeholder("hrk.displayName",
 				function (BaseMember $member): string {
 					return $member->getPlayer()->getDisplayName();
@@ -56,7 +55,7 @@ class HRKChat extends PluginBase {
 		);
 
 		$this->getServer()->getPluginManager()->registerEvents(
-			new EventListener($this, $this->getConfig()->getAll()),
+			new EventListener($this, $phMgr, $this->getConfig()->getAll()),
 			$this
 		);
 	}

@@ -31,12 +31,9 @@ namespace CortexPE\HRKChat\placeholder;
 
 
 use CortexPE\Hierarchy\member\BaseMember;
-use CortexPE\HRKChat\HRKChat;
 use CortexPE\HRKChat\placeholder\exception\PlaceholderCollisionError;
 
 class PlaceholderManager {
-	/** @var HRKChat */
-	protected $plugin;
 	/** @var string */
 	protected $prefix = "{{";
 	/** @var string */
@@ -46,8 +43,7 @@ class PlaceholderManager {
 	/** @var Placeholder[] */
 	protected $placeholders = [];
 
-	public function __construct(HRKChat $plugin, array $config) {
-		$this->plugin = $plugin;
+	public function __construct(array $config) {
 		self::$cacheExpiration = $config["cacheExpiration"];
 		$this->prefix = $config["prefix"];
 		$this->suffix = $config["suffix"];
