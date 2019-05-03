@@ -31,7 +31,7 @@ namespace CortexPE\HRKChat;
 
 
 use CortexPE\Hierarchy\event\MemberRoleUpdateEvent;
-use CortexPE\Hierarchy\Loader;
+use CortexPE\Hierarchy\Hierarchy;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\Player;
@@ -62,7 +62,7 @@ class EventListener implements Listener {
 		if($p instanceof Player) {
 			$roles = $m->getRoles();
 			$topRolePosition = PHP_INT_MIN;
-			$roleID = Loader::getInstance()->getRoleManager()->getDefaultRole()->getId();
+			$roleID = Hierarchy::getRoleManager()->getDefaultRole()->getId();
 			foreach($roles as $role) {
 				if(
 					isset($this->nameTagFormats[$role->getId()]) &&
@@ -84,11 +84,11 @@ class EventListener implements Listener {
 	 * @ignoreCancelled true
 	 */
 	public function onChat(PlayerChatEvent $ev) {
-		$member = ($hrk = Loader::getInstance())->getMemberFactory()->getMember(($p = $ev->getPlayer()));
+		$member = Hierarchy::getMemberFactory()->getMember(($p = $ev->getPlayer()));
 
 		$roles = $member->getRoles();
 		$topRolePosition = PHP_INT_MIN;
-		$roleID = $hrk->getRoleManager()->getDefaultRole()->getId();
+		$roleID = Hierarchy::getRoleManager()->getDefaultRole()->getId();
 		foreach($roles as $role) {
 			if(
 				isset($this->chatFormats[$role->getId()]) &&
