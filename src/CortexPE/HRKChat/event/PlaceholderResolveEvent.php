@@ -27,58 +27,50 @@
 
 declare(strict_types=1);
 
-namespace CortexPE\HRKChat\placeholder;
+namespace CortexPE\HRKChat\event;
 
 
 use CortexPE\Hierarchy\member\BaseMember;
-use pocketmine\utils\Utils;
+use pocketmine\event\Event;
 
-final class Placeholder {
+class PlaceholderResolveEvent extends Event {
+	/** @var BaseMember */
+	protected $member;
 	/** @var string */
-	private $name;
-	/** @var callable */
-	private $callback;
+	protected $placeholderName;
 	/** @var string */
-	private $lastValue = "";
-	/** @var int */
-	private $lastUpdate = 0;
+	protected $value = null;
 
-	public function __construct(string $name, callable $callback) {
-		/***
-		 * Read the placeholder docs:
-		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-registration
-		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-naming-standard
-		 * - https://github.com/CortexPE/HRKChat/wiki/Placeholder-callback-standard
-		 */
-		if(!preg_match("/^(?:[A-Za-z0-9_\-]{2,})(?:\.[A-Za-z0-9_\-]+)+$/", $name)) {
-			throw new \InvalidArgumentException("Placeholder name does not meet specific naming standards.");
-		}
-		Utils::validateCallableSignature(function (BaseMember $player): string {
-			return '';
-		}, $callback);
+	public function __construct(BaseMember $member, string $placeholderName) {
+		$this->member = $member;
+		$this->placeholderName = $placeholderName;
+	}
 
-		$this->name = $name;
-		$this->callback = $callback;
+	/**
+	 * @return BaseMember
+	 */
+	public function getMember(): BaseMember {
+		return $this->member;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName(): string {
-		return $this->name;
+	public function getPlaceholderName(): string {
+		return $this->placeholderName;
 	}
 
 	/**
-	 * @param BaseMember $player
-	 *
 	 * @return string
 	 */
-	public function getValue(BaseMember $player): string {
-		if((time() - $this->lastUpdate) > PlaceholderManager::getCacheExpiration()) {
-			$this->lastUpdate = time();
-			return ($this->lastValue = ($this->callback)($player));
-		}
+	public function getValue(): ?string {
+		return $this->value;
+	}
 
-		return $this->lastValue;
+	/**
+	 * @param string $value
+	 */
+	public function setValue(string $value): void {
+		$this->value = $value;
 	}
 }

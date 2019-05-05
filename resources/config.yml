@@ -5,22 +5,43 @@ placeholder:
   prefix: "{{"
   # Placeholder suffix
   suffix: "}}"
-  # Placeholder cache expiration time in seconds
-  cacheExpiration: 10
 
 # !!! NOTE !!!
-# Placeholders are registered by plugins. Please read the documentation pages at:
-#  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-registration
+# Placeholders are handled by plugins. Please read the documentation pages at:
+#  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-handling
 #  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-naming-standard
-#  - https://github.com/CortexPE/HRKChat/wiki/Placeholder-callback-standard
 #
-# The only placeholders that exist by default are:
+# The only placeholders that are handled by default are:
 # - {{hrk.displayName}} => Player display name
 # - {{msg}} => [ONLY FOR CHAT FORMAT] the message the player sent
 #
-# This basically means that other plugins such as factions plugins SHOULD register their own placeholders.
+# This basically means that other plugins such as factions plugins SHOULD handle the placeholders.
 # A big advantage of this is that, there can be unlimited placeholders to use, as plugins can expand it indefinitely
 # !!! NOTE !!!
+
+# Formatting codes are accepted:
+# &0 => Black
+# &1 => Dark Blue
+# &2 => Dark Green
+# &3 => Dark Aqua
+# &4 => Dark Red
+# &5 => Dark Purple
+# &6 => Gold
+# &7 => Gray
+# &8 => Dark Gray
+# &9 => Blue
+# &a => Green
+# &b => Aqua
+# &c => Red
+# &d => Light Purple
+# &e => Yellow
+# &f => White
+#
+# &l => Bold
+# &o => Italic
+# &r => Reset
+# &m => Strikethrough (unsupported by MCPE)
+# &n => Underline (unsupported by MCPE)
 
 # Chat format for highest roles
 chatFormat:

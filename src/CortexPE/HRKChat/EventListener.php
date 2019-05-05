@@ -32,7 +32,8 @@ namespace CortexPE\HRKChat;
 
 use CortexPE\Hierarchy\event\MemberRoleUpdateEvent;
 use CortexPE\Hierarchy\Hierarchy;
-use CortexPE\HRKChat\placeholder\PlaceholderManager;
+use CortexPE\HRKChat\event\PlaceholderResolveEvent;
+use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\Player;
@@ -40,8 +41,6 @@ use pocketmine\Player;
 class EventListener implements Listener {
 	/** @var HRKChat */
 	private $plugin;
-	/** @var PlaceholderManager */
-	private $phMgr;
 	/** @var Hierarchy */
 	private $hrk;
 	/** @var string[] */
@@ -49,9 +48,8 @@ class EventListener implements Listener {
 	/** @var string[] */
 	private $nameTagFormats = [];
 
-	public function __construct(HRKChat $plugin, PlaceholderManager $phMgr, array $config) {
+	public function __construct(HRKChat $plugin, array $config) {
 		$this->plugin = $plugin;
-		$this->phMgr = $phMgr;
 		$this->hrk = $plugin->getServer()->getPluginManager()->getPlugin("Hierarchy");
 		$this->chatFormats = $config["chatFormat"];
 		$this->nameTagFormats = $config["nameTagFormat"];
@@ -62,6 +60,8 @@ class EventListener implements Listener {
 	 *
 	 * @priority        LOW
 	 * @ignoreCancelled true
+	 *
+	 * @throws UnresolvedPlaceholderException
 	 */
 	public function onRoleChange(MemberRoleUpdateEvent $ev): void {
 		$m = $ev->getMember();
@@ -80,7 +80,7 @@ class EventListener implements Listener {
 				}
 			}
 
-			$p->setNameTag($this->phMgr->processString($this->nameTagFormats[$roleID], $m));
+			$p->setNameTag($this->plugin->resolvePlaceholders($this->nameTagFormats[$roleID], $m));
 		}
 	}
 
@@ -89,6 +89,8 @@ class EventListener implements Listener {
 	 *
 	 * @priority        LOW
 	 * @ignoreCancelled true
+	 *
+	 * @throws UnresolvedPlaceholderException
 	 */
 	public function onChat(PlayerChatEvent $ev) {
 		$member = $this->hrk->getMemberFactory()->getMember(($p = $ev->getPlayer()));
@@ -105,12 +107,23 @@ class EventListener implements Listener {
 				$roleID = $role->getId();
 			}
 		}
-		$msg = str_replace(
-			$this->phMgr->getPrefix() . "msg" . $this->phMgr->getSuffix(),
-			$ev->getMessage(),
-			$this->chatFormats[$roleID]
-		);
+		$msg = $this->plugin->resolvePlaceholders($this->chatFormats[$roleID], $member);
 
-		$ev->setFormat($this->phMgr->processString($msg, $member));
+		$ev->setFormat(str_replace(
+			$this->plugin->getPrefix() . "msg" . $this->plugin->getSuffix(),
+			$ev->getMessage(),
+			$msg
+		));
+	}
+
+	/**
+	 * @param PlaceholderResolveEvent $ev
+	 *
+	 * @priority LOWEST
+	 */
+	public function onPlaceholderResolve(PlaceholderResolveEvent $ev): void {
+		if($ev->getPlaceholderName() === "hrk.displayName") {
+			$ev->setValue($ev->getMember()->getPlayer()->getDisplayName());
+		}
 	}
 }

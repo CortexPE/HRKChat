@@ -30,40 +30,57 @@ declare(strict_types=1);
 namespace CortexPE\HRKChat;
 
 use CortexPE\Hierarchy\member\BaseMember;
-use CortexPE\HRKChat\placeholder\Placeholder;
-use CortexPE\HRKChat\placeholder\PlaceholderManager;
+use CortexPE\HRKChat\event\PlaceholderResolveEvent;
+use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\TextFormat;
 
 class HRKChat extends PluginBase {
-	/** @var PlaceholderManager */
-	protected static $placeholderManager;
+	/** @var string */
+	protected $prefix = "{{";
+	/** @var string */
+	protected $suffix = "}}";
+	/** @var string */
+	protected $placeholderRegex;
 
 	public function onEnable(): void {
 		$this->saveResource("config.yml");
 
-		$phMgr = self::$placeholderManager = new PlaceholderManager(
-			$this->getConfig()->get("placeholder")
-		);
+		$config = $this->getConfig()->getAll();
+		$this->prefix = $config["placeholder"]["prefix"];
+		$this->suffix = $config["placeholder"]["suffix"];
+		$this->placeholderRegex = "/(?:" . preg_quote($this->prefix) . ")((?:[A-Za-z0-9_\-]{2,})(?:\.[A-Za-z0-9_\-]+)+)(?:" . preg_quote($this->suffix) . ")/";
 
-		// Default placeholder(s)
-		$phMgr->registerPlaceholder(
-			new Placeholder("hrk.displayName",
-				function (BaseMember $member): string {
-					return $member->getPlayer()->getDisplayName();
+		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this, $config), $this);
+	}
+
+	public function resolvePlaceholders(string $msg, BaseMember $member): string {
+		if(preg_match_all($this->placeholderRegex, $msg, $matches)) {
+			foreach($matches[1] as $k => $match) {
+				$ev = new PlaceholderResolveEvent($member, $match);
+				$ev->call();
+				$val = $ev->getValue();
+				if($val === null) {
+					throw new UnresolvedPlaceholderException("Unresolved placeholder '{$match}'");
 				}
-			)
-		);
+				$msg = str_replace($matches[0][$k], $val, $msg);
+			}
+		}
 
-		$this->getServer()->getPluginManager()->registerEvents(
-			new EventListener($this, $phMgr, $this->getConfig()->getAll()),
-			$this
-		);
+		return TextFormat::colorize($msg, "&");
 	}
 
 	/**
-	 * @return PlaceholderManager
+	 * @return string
 	 */
-	public static function getPlaceholderManager(): PlaceholderManager {
-		return self::$placeholderManager;
+	public function getPrefix(): string {
+		return $this->prefix;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSuffix(): string {
+		return $this->suffix;
 	}
 }
