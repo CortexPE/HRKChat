@@ -4,6 +4,4 @@ branches:
 projects:
   HRKChat:
     path: ""
-    fullGzip: 9
-    compressBuilds: false
 ...
