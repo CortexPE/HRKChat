@@ -8,8 +8,6 @@
 | Feature | HRKChat | PureChat |
 | :-----: | :-------: | :-------: |
 | Unlimited Placeholders/Variables | ✔️ | ❌ |
-| Placeholder Value Caching | ✔️ | ❌ |
 | Extremely modular | ✔️ | ❌ |
 | Out-of-the-box factions plugin support | ❌ | ✔️ |
 | Highly configurable | ✔️ | ❌ |
-| Multi-world | ❌ | ✔️ |
