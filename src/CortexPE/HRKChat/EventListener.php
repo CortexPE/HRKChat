@@ -45,7 +45,7 @@ class EventListener implements Listener {
 	/** @var Hierarchy */
 	private $hrk;
 	/** @var int */
-	private $defaultRoleID;
+	private $defaultRoleID = null;
 	/** @var string[] */
 	private $chatFormats = [];
 	/** @var string[] */
@@ -54,7 +54,6 @@ class EventListener implements Listener {
 	public function __construct(HRKChat $plugin, array $config) {
 		$this->plugin = $plugin;
 		$this->hrk = $plugin->getServer()->getPluginManager()->getPlugin("Hierarchy");
-		$this->defaultRoleID = $this->hrk->getRoleManager()->getDefaultRole()->getId();
 		$this->chatFormats = $config["chatFormat"];
 		$this->nameTagFormats = $config["nameTagFormat"];
 	}
@@ -100,6 +99,9 @@ class EventListener implements Listener {
 	}
 
 	private function resolveFormat(BaseMember $member, array $formatList): string {
+		if($this->defaultRoleID === null){
+			$this->defaultRoleID = $this->hrk->getRoleManager()->getDefaultRole()->getId();
+		}
 		$roles = $member->getRoles();
 		$topRolePosition = PHP_INT_MIN;
 		$roleID = $this->defaultRoleID;
