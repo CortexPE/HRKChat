@@ -43,15 +43,13 @@ placeholder:
 # &m => Strikethrough (unsupported by MCPE)
 # &n => Underline (unsupported by MCPE)
 
-# Chat format for highest roles
+# Chat formatting
 chatFormat:
-  # Format:
   # RoleID: "<{{hrk.displayName}}> {{msg}}"
   1: "<{{hrk.displayName}}> {{msg}}"
 
-# Chat format for highest roles
+# NameTag formatting
 nameTagFormat:
-  # Format:
   # RoleID: "{{hrk.displayName}}"
   1: "{{hrk.displayName}}"
 ...
