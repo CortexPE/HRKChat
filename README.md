@@ -4,7 +4,7 @@
 
 ***NOTE: This plugin requires the [CortexPE/Hierarchy](https://github.com/CortexPE/Hierarchy) plugin***
 
-## Advantages:
+## Features:
 | Feature | HRKChat | PureChat |
 | :-----: | :-------: | :-------: |
 | Unlimited Placeholders/Variables | ✔️ | ❌ |
