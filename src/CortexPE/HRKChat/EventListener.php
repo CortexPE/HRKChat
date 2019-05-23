@@ -99,7 +99,7 @@ class EventListener implements Listener {
 	}
 
 	private function resolveFormat(BaseMember $member, array $formatList): string {
-		if($this->defaultRoleID === null){
+		if($this->defaultRoleID === null) {
 			$this->defaultRoleID = $this->hrk->getRoleManager()->getDefaultRole()->getId();
 		}
 		$roles = $member->getRoles();
