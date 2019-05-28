@@ -107,7 +107,7 @@ class EventListener implements Listener {
 		$roleID = $this->defaultRoleID;
 		foreach($roles as $role) {
 			if(
-				isset($this->nameTagFormats[$role->getId()]) &&
+				isset($formatList[$role->getId()]) &&
 				$role->getPosition() > $topRolePosition
 			) {
 				$topRolePosition = $role->getPosition();
