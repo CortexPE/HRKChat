@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace CortexPE\HRKChat;
 
+use CortexPE\Hierarchy\Hierarchy;
 use CortexPE\Hierarchy\member\BaseMember;
 use CortexPE\HRKChat\event\PlaceholderResolveEvent;
 use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
@@ -51,7 +52,28 @@ class HRKChat extends PluginBase {
 		$this->suffix = $config["placeholder"]["suffix"];
 		$this->placeholderRegex = "/(?:" . preg_quote($this->prefix) . ")((?:[A-Za-z0-9_\-]{2,})(?:\.[A-Za-z0-9_\-]+)+)(?:" . preg_quote($this->suffix) . ")/";
 
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this, $config), $this);
+		/** @var Hierarchy $hrk */
+		$hrk = ($plMgr = $this->getServer()->getPluginManager())->getPlugin("Hierarchy");
+		$defID = $hrk->getRoleManager()->getDefaultRole()->getId();
+
+		if(!isset($config["chatFormat"][$defID])){
+			($conf = $this->getConfig())->setNested(
+				"chatFormat.{$defID}",
+				"<{$this->prefix}hrk.displayName{$this->suffix}> {$this->prefix}msg{$this->suffix}"
+			);
+			$conf->save();
+			$this->getLogger()->warning("Chat format for default role was not found, a default format has now been provided.");
+		}
+		if(!isset($config["nameTagFormat"][$defID])){
+			($conf = $this->getConfig())->setNested(
+				"nameTagFormat.{$defID}",
+				"{$this->prefix}hrk.displayName{$this->suffix}"
+			);
+			$conf->save();
+			$this->getLogger()->warning("NameTag format for default role was not found, a default format has now been provided.");
+		}
+
+		$plMgr->registerEvents(new EventListener($this, $config), $this);
 	}
 
 	public function resolvePlaceholders(string $msg, BaseMember $member): string {
