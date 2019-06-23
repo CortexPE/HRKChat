@@ -7,3 +7,4 @@ author: CortexPE
 description: Chat & nametag formatter that respects Role Hierarchy
 website: https://CortexPE.xyz
 depends: ["Hierarchy"]
+softdepend: ["Hierarchy"] # load this AFTER Hierarchy... #blameShoghi
