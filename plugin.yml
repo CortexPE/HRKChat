@@ -6,4 +6,5 @@ load: POSTWORLD
 author: CortexPE
 description: Chat & nametag formatter that respects Role Hierarchy
 website: https://CortexPE.xyz
-depends: ["Hierarchy"]
+depend: ["Hierarchy"]
+softdepend: ["Hierarchy"]
