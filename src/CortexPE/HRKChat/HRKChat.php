@@ -31,10 +31,13 @@ namespace CortexPE\HRKChat;
 
 use CortexPE\Hierarchy\Hierarchy;
 use CortexPE\Hierarchy\member\BaseMember;
+use CortexPE\Hierarchy\role\Role;
+use CortexPE\Hierarchy\role\RoleManager;
 use CortexPE\HRKChat\event\PlaceholderResolveEvent;
 use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
+use function is_numeric;
 
 class HRKChat extends PluginBase {
 	/** @var string */
@@ -54,7 +57,7 @@ class HRKChat extends PluginBase {
 
 		/** @var Hierarchy $hrk */
 		$hrk = ($plMgr = $this->getServer()->getPluginManager())->getPlugin("Hierarchy");
-		$defID = $hrk->getRoleManager()->getDefaultRole()->getId();
+		$defID = ($rMgr = $hrk->getRoleManager())->getDefaultRole()->getId();
 
 		if(!isset($config["chatFormat"][$defID])){
 			($conf = $this->getConfig())->setNested(
@@ -73,7 +76,25 @@ class HRKChat extends PluginBase {
 			$this->getLogger()->warning("NameTag format for default role was not found, a default format has now been provided.");
 		}
 
+		// convert role names to IDs
+		$this->resolveRoleIDs($rMgr, $config, "chatFormat");
+		$this->resolveRoleIDs($rMgr, $config, "nameTagFormat");
+
 		$plMgr->registerEvents(new EventListener($this, $config), $this);
+	}
+
+	private function resolveRoleIDs(RoleManager $rMgr, array &$config, string $key):void {
+		foreach($config[$key] as $ref => $fmt){
+			if(!is_numeric($ref)){
+				$role = $rMgr->getRoleByName($ref);
+				if($role instanceof Role){
+					$config[$key][($id = $role->getId())] = $fmt;
+					unset($config[$key][$ref]);
+				} else {
+					$this->getLogger()->error("Cannot resolve {$key} role '{$ref}' to a valid ID. Please double check your configuration.");
+				}
+			}
+		}
 	}
 
 	public function resolvePlaceholders(string $msg, BaseMember $member): string {
