@@ -91,7 +91,7 @@ class EventListener implements Listener {
 
 		$ev->setFormat(str_replace(
 			$this->plugin->getPrefix() . "msg" . $this->plugin->getSuffix(),
-			$ev->getMessage(),
+			"{%1}", // default PM format placeholder, this makes it so that PlayerChatEvent->setMessage() works
 			$this->plugin->resolvePlaceholders(
 				$this->resolveFormat($m, $this->chatFormats), $m
 			)
