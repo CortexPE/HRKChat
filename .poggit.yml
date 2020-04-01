@@ -4,5 +4,6 @@ branches:
 projects:
   HRKChat:
     path: ""
-    lint: false
+    lint:
+      phpstan: false
 ...
