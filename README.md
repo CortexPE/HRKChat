@@ -9,5 +9,5 @@
 | :-----: | :-------: | :-------: |
 | Unlimited Placeholders/Variables | ✔️ | ❌ |
 | Extremely modular | ✔️ | ❌ |
-| Out-of-the-box factions plugin support | ❌ | ✔️ |
+| [Out-of-the-box factions plugin support (PiggyFactions)](https://github.com/DaPigGuy/PiggyFactions) | ✔️ | ✔️ |
 | Highly configurable | ✔️ | ❌ |
