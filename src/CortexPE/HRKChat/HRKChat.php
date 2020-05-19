@@ -104,7 +104,8 @@ class HRKChat extends PluginBase {
 				$ev->call();
 				$val = $ev->getValue();
 				if($val === null) {
-					throw new UnresolvedPlaceholderException("Unresolved placeholder '{$match}'");
+					$val = TextFormat::OBFUSCATED . "NULL" . TextFormat::RESET;
+					$this->getLogger()->error("Unresolved placeholder '{$match}'");
 				}
 				$msg = str_replace($matches[0][$k], $val, $msg);
 			}
