@@ -34,10 +34,9 @@ use CortexPE\Hierarchy\event\MemberRoleUpdateEvent;
 use CortexPE\Hierarchy\Hierarchy;
 use CortexPE\Hierarchy\member\BaseMember;
 use CortexPE\HRKChat\event\PlaceholderResolveEvent;
-use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class EventListener implements Listener {
 	/** @var HRKChat */
@@ -63,8 +62,6 @@ class EventListener implements Listener {
 	 *
 	 * @priority        LOW
 	 * @ignoreCancelled true
-	 *
-	 * @throws UnresolvedPlaceholderException
 	 */
 	public function onRoleChange(MemberRoleUpdateEvent $ev): void {
 		$m = $ev->getMember();
@@ -83,8 +80,6 @@ class EventListener implements Listener {
 	 *
 	 * @priority        LOW
 	 * @ignoreCancelled true
-	 *
-	 * @throws UnresolvedPlaceholderException
 	 */
 	public function onChat(PlayerChatEvent $ev) {
 		$m = $this->hrk->getMemberFactory()->getMember(($p = $ev->getPlayer()));

@@ -34,7 +34,6 @@ use CortexPE\Hierarchy\member\BaseMember;
 use CortexPE\Hierarchy\role\Role;
 use CortexPE\Hierarchy\role\RoleManager;
 use CortexPE\HRKChat\event\PlaceholderResolveEvent;
-use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 use function is_numeric;
