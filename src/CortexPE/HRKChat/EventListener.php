@@ -34,7 +34,7 @@ use CortexPE\Hierarchy\event\MemberRoleUpdateEvent;
 use CortexPE\Hierarchy\Hierarchy;
 use CortexPE\Hierarchy\member\BaseMember;
 use CortexPE\HRKChat\event\PlaceholderResolveEvent;
-use CortexPE\HRKChat\exception\UnresolvedPlaceholderException;
+use CortexPE\HRKChat\event\PlayerNametagRefreshEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\Player;
@@ -63,8 +63,6 @@ class EventListener implements Listener {
 	 *
 	 * @priority        LOW
 	 * @ignoreCancelled true
-	 *
-	 * @throws UnresolvedPlaceholderException
 	 */
 	public function onRoleChange(MemberRoleUpdateEvent $ev): void {
 		$m = $ev->getMember();
@@ -79,12 +77,27 @@ class EventListener implements Listener {
 	}
 
 	/**
+	 * @param PlayerNametagRefreshEvent $ev
+	 *
+	 * @priority MONITOR
+	 */
+	public function onNameTagRefresh(PlayerNametagRefreshEvent $ev): void {
+		$p = $ev->getPlayer();
+		$m = $this->hrk->getMemberFactory()->getMember($p);
+		if($m instanceof BaseMember) {
+			$p->setNameTag(
+				$this->plugin->resolvePlaceholders(
+					$this->resolveFormat($m, $this->nameTagFormats), $m
+				)
+			);
+		}
+	}
+
+	/**
 	 * @param PlayerChatEvent $ev
 	 *
 	 * @priority        LOW
 	 * @ignoreCancelled true
-	 *
-	 * @throws UnresolvedPlaceholderException
 	 */
 	public function onChat(PlayerChatEvent $ev) {
 		$m = $this->hrk->getMemberFactory()->getMember(($p = $ev->getPlayer()));
@@ -105,7 +118,7 @@ class EventListener implements Listener {
 		$roles = $member->getRoles();
 		$topRolePosition = PHP_INT_MIN;
 		$roleID = $this->defaultRoleID;
-		foreach($roles as $role) {
+		foreach($roles as $role){
 			if(
 				isset($formatList[$role->getId()]) &&
 				$role->getPosition() > $topRolePosition
