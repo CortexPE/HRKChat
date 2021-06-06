@@ -46,9 +46,9 @@ class EventListener implements Listener {
 	/** @var int */
 	private $defaultRoleID = null;
 	/** @var string[] */
-	private $chatFormats = [];
+	private $chatFormats;
 	/** @var string[] */
-	private $nameTagFormats = [];
+	private $nameTagFormats;
 
 	public function __construct(HRKChat $plugin, array $config) {
 		$this->plugin = $plugin;

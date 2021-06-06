@@ -61,7 +61,7 @@ class PlaceholderResolveEvent extends Event {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getValue(): ?string {
 		return $this->value;
