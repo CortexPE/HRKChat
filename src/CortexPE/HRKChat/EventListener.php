@@ -33,6 +33,7 @@ namespace CortexPE\HRKChat;
 use CortexPE\Hierarchy\event\MemberRoleUpdateEvent;
 use CortexPE\Hierarchy\Hierarchy;
 use CortexPE\Hierarchy\member\BaseMember;
+use CortexPE\HRKChat\event\NametagUpdateRequestEvent;
 use CortexPE\HRKChat\event\PlaceholderResolveEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -91,6 +92,18 @@ class EventListener implements Listener {
 				$this->resolveFormat($m, $this->chatFormats), $m
 			)
 		));
+	}
+
+	/**
+	 * @param NametagUpdateRequestEvent $ev
+	 *
+	 * @priority        MONITOR
+	 * @ignoreCancelled true
+	 */
+	public function onNametagUpdateRequest(NametagUpdateRequestEvent $ev) {
+		$m = $this->hrk->getMemberFactory()->getMember(($p = $ev->getPlayer()));
+
+		$p->setNameTag($this->plugin->resolvePlaceholders($this->resolveFormat($m, $this->nameTagFormats), $m));
 	}
 
 	private function resolveFormat(BaseMember $member, array $formatList): string {
